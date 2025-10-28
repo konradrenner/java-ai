@@ -1,0 +1,8 @@
+= java-ai
+Playground for experiments with Java and agentic ai things. Use link:https://devenv.sh/getting-started/[devenv] to get started fast.
+
+The bb8-agent (quarkus) takes prompts or can be integrated in other agentic environments via mcp for droid tasks.
+
+bb8-agent can connect with c3po-agent (quarkus) via a2a protocol.
+
+bb8-agent uses r2d2-agent (openliberty) via mcp to get secret map informations.
