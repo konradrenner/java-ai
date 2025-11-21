@@ -65,17 +65,22 @@ in {
     OS_TYPE=$(uname)
     if [[ "$OS_TYPE" == "Linux" ]]; then
       alias startide="netbeans --userdir $(pwd)/.netbeans --fontsize 14 > /dev/null 2>&1 &"
+
+      if [ -f /etc/profile ]; then
+        source /etc/profile
+      fi
+      if [ -f ~/.bashrc ]; then
+        source ~/.bashrc
+      fi
+
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
       alias startide="netbeans --userdir $(pwd)/.netbeans > /dev/null 2>&1 &"
+
+      exec zsh -l
+
     else
       echo "Nicht unterstütztes Betriebssystem: $OS_TYPE"
       exit 1
-    fi
-    if [ -f /etc/profile ]; then
-      source /etc/profile
-    fi
-    if [ -f ~/.bashrc ]; then
-      source ~/.bashrc
     fi
   '';
 
