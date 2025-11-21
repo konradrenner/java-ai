@@ -39,3 +39,9 @@ devenv.local.nix
 
 # pre-commit
 .pre-commit-config.yaml
+
+#VS Code
+.DS_Store
+
+#ollama
+.ollama-models

@@ -1,6 +1,10 @@
 { pkgs, lib, config, inputs, ... }:
 
-{
+
+let
+  ollamaHost   = "127.0.0.1";
+  ollamaPort   = "11434";
+in {
   # https://devenv.sh/basics/
   env.GREET = "devenv";
 
@@ -13,7 +17,16 @@
     pkgs.plantuml
     pkgs.netbeans
     pkgs.gh
+    pkgs.ollama
+    pkgs.curl
+    pkgs.jq
     ];
+
+   # Environment-Variablen für Shell & Prozesse
+  env = {
+    OLLAMA_HOST   = ollamaHost;
+    OLLAMA_PORT   = ollamaPort;
+  };
 
   # https://devenv.sh/languages/
   languages.java = {
@@ -23,7 +36,15 @@
   };
 
   # https://devenv.sh/processes/
-  # processes.cargo-watch.exec = "cargo-watch";
+  processes.ollama.exec = ''
+    export OLLAMA_HOST="${ollamaHost}"
+    export OLLAMA_PORT="${ollamaPort}"
+    # Modelle im Projektverzeichnis, aber über $PWD, nicht über ./.
+    export OLLAMA_MODELS="$PWD/.ollama-models"
+
+    echo "[ollama] starting daemon on $OLLAMA_HOST:$OLLAMA_PORT"
+    exec ${pkgs.ollama}/bin/ollama serve
+  '';
 
   # https://devenv.sh/services/
   services.opentelemetry-collector.enable = true;
@@ -37,6 +58,9 @@
   enterShell = ''
     hello
     git --version
+    echo "Starte Ollama und den OTEL Collector mit:  devenv up"
+    echo "Um ein Language Model zu ziehn, z.B. folgenden Befehl ausfuehren:"
+    echo "  ollama pull llama3"
 
     OS_TYPE=$(uname)
     if [[ "$OS_TYPE" == "Linux" ]]; then
